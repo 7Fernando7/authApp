@@ -2,6 +2,8 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 
+import Swal from 'sweetalert2'
+
 
 @Component({
   standalone: true,
@@ -16,17 +18,22 @@ export class LoginPagesComponent {
   private authService= inject( AuthService );
 
   public myForm: FormGroup = this.fb.group({
-    email: ['', [ Validators.required, Validators.email ]],
-    password: ['', [ Validators.required, Validators.minLength(6) ]],
+    email: ['fernando@google.com', [ Validators.required, Validators.email ]],
+    password: ['1234567', [ Validators.required, Validators.minLength(6) ]],
 
   });
 
   login() {
     const { email, password } = this.myForm.value;
     this.authService.login( email, password )
-    .subscribe( success => {
-      console.log( success );
+    .subscribe( {
+      next: () => console.log('Todo bien!'),
+      error: (message) => {
+        Swal.fire( 'Error', message, 'error' )
+      }
     })
+
+
   }
 
 }
