@@ -1,17 +1,19 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-
+import { AuthService } from '../../services/auth.service';
 
 
 @Component({
   standalone: true,
   templateUrl: './login-pages.component.html',
   imports: [ ReactiveFormsModule ],
+
   styleUrls: ['./login-pages.component.css']
 })
 export class LoginPagesComponent {
 
   private fb = inject( FormBuilder );
+  private authService= inject( AuthService );
 
   public myForm: FormGroup = this.fb.group({
     email: ['', [ Validators.required, Validators.email ]],
@@ -20,7 +22,11 @@ export class LoginPagesComponent {
   });
 
   login() {
-    console.log( this.myForm.value );
+    const { email, password } = this.myForm.value;
+    this.authService.login( email, password )
+    .subscribe( success => {
+      console.log( success );
+    })
   }
 
 }
