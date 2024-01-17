@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2'
 
 import { AuthService } from '../../services/auth.service';
@@ -11,7 +11,7 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   standalone: true,
   templateUrl: './login-pages.component.html',
-  imports: [ ReactiveFormsModule ],
+  imports: [ ReactiveFormsModule, RouterModule ],
 
   styleUrls: ['./login-pages.component.css']
 })

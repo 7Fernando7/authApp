@@ -118,6 +118,7 @@ button:hover {
   line-height: 1.5;
   color: #333333;
   text-transform: uppercase;
+  cursor: pointer;
 }
 
 .bg1 {background-color: #3b5998}

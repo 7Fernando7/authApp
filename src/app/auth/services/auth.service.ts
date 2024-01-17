@@ -1,9 +1,10 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Inject, Injectable, computed, inject, signal } from '@angular/core';
 import { environment } from '../../../enviroments/environments';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
 
 import { User, AuthStatus, LoginResponse, CheckTokenResponse } from '../interfaces';
+import { DOCUMENT } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -20,17 +21,28 @@ export class AuthService {
   public currentUser = computed( () => this._currentUser());
   public authStatus = computed( () => this._authStatus());
 
-  constructor() { }
+
+
+  constructor(@Inject(DOCUMENT) private document: Document) {
+
+     this.checkAuthStatus().subscribe();
+   }
 
   private setAuthentication(user: User, token: string ): boolean {
     this._currentUser.set( user );
     this._authStatus.set( AuthStatus.authenticated );
-    localStorage.setItem( 'token', token );
+
+    const localStorage = this.document.defaultView?.localStorage;
+    if (localStorage) {
+
+      localStorage.setItem( 'token', token );
+    }
 
     return true;
   }
 
   login( email: string, password: string): Observable<boolean> {
+
 
     const url = `${ this.baseUrl }/auth/login`;
     const body = { email, password };
@@ -48,7 +60,14 @@ export class AuthService {
   checkAuthStatus(): Observable<boolean> {
 
     const url = `${ this.baseUrl }/auth/check-token`;
-    const token = localStorage.getItem('token');
+
+    let token = null;
+
+    const localStorage = this.document.defaultView?.localStorage;
+    if (localStorage) {
+
+      token = localStorage.getItem('token');
+    }
 
     if ( !token )  return of(false);
 
