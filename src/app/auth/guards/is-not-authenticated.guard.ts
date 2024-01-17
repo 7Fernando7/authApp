@@ -6,11 +6,11 @@ import { AuthStatus } from '../interfaces';
 export const isNotAuthenticatedGuard: CanActivateFn = (route, state) => {
 
   const authService = inject( AuthService );
-  const router = inject( Router );
+  const router      = inject( Router );
 
-  if( authService.authStatus() === AuthStatus.notAuthenticated ) {
+  if( authService.authStatus() === AuthStatus.authenticated ) {
     router.navigateByUrl('/dashboard');
-  return false;
+      return false;
   }
 
   return false;

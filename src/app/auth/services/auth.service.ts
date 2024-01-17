@@ -15,7 +15,7 @@ export class AuthService {
   private http = inject( HttpClient );
 
   private _currentUser = signal<User|null>(null);
-  private _authStatus = signal<AuthStatus>( AuthStatus.checking);
+  private _authStatus = signal<AuthStatus>( AuthStatus.checking );
 
   //! Al mundo exterior
   public currentUser = computed( () => this._currentUser());
@@ -69,7 +69,10 @@ export class AuthService {
       token = localStorage.getItem('token');
     }
 
-    if ( !token )  return of(false);
+    if ( !token )  {
+      this.logout();
+      return of(false);
+    }
 
     const headers = new HttpHeaders()
     .set('Authorization', `Bearer ${ token }`);
@@ -82,6 +85,17 @@ export class AuthService {
         return of(false )
       })
     )
+
+  }
+
+  logout() {
+    const localStorage = this.document.defaultView?.localStorage;
+    if(localStorage) {
+
+      localStorage.removeItem('token');
+    }
+    this._currentUser.set(null);
+    this._authStatus.set( AuthStatus.notAuthenticated );
 
   }
 

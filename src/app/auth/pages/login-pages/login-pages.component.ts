@@ -12,7 +12,6 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   templateUrl: './login-pages.component.html',
   imports: [ ReactiveFormsModule, RouterModule ],
-
   styleUrls: ['./login-pages.component.css']
 })
 export class LoginPagesComponent {
